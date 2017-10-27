@@ -1,0 +1,13 @@
+{
+  "name": "PoolGame",
+  "private": true,
+  "scripts": {
+    "start": "meteor run"
+  },
+  "dependencies": {
+    "babel-runtime": "^6.20.0",
+    "busboy": "^0.2.14",
+    "meteor-node-stubs": "~0.2.4",
+    "twilio": "^3.0.0-edge"
+  }
+}
