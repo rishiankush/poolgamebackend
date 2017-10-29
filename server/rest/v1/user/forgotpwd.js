@@ -7,60 +7,43 @@ Router.route(
   function() {
     this.response.setHeader('Access-Control-Allow-Origin', '*');
     if (this.request.method === 'POST') {
-      SSR.compileTemplate('htmlEmail', Assets.getText('emailTemplate.html'));
       let context = this,
         feild = '',
         Data = Utility.getRequestContents(context.request),
         hasQuery = Utility.hasData(Data),
         validData = Utility.validate(Data, {
-          phoneNum: NonEmptyString, // edited phoneNumber to phoneNum
+          email: NonEmptyString,
         });
 
       field = checkMandatoryFields(Data);
 
       if (validData) {
-        if (isPhoneNo(Data.phoneNum) == false) {
+        if (isEmail(Data.phoneNum) == false) {
           validData = false;
           Utility.response(
             context,
             400,
-            failResponse('Please enter valid phone number along with countrycode.')
+            failResponse('Please enter valid email address')
           );
         } else {
-          let UserData = UserMaster.findOne({ phoneNum: Data.phoneNum });
-
-          if (UserData) {
+          let UserData = UserMaster.findOne({ email: Data.email });
+          // let checkVerifiedUser = Meteor.users.findOne({ 'emails.verified': true })
+          //   console.log(checkVerifiedUser)
+          if (UserData ) {
             if (Data && hasQuery && validData) {
-              let randomNum = Math.floor(Math.random() * 9000) + 1000;
-              console.log('otp *********** ', UserData.otp);
-              sendSms(Data.phoneNum, randomNum);
-
-              UserMaster.update(
-                { phoneNum: Data.phoneNum },
-                { $set: { otp: randomNum, verifiedOtp: false } }
-              ); // otp for forgot password
-
-              // let emailData = {
-              //   msg: 'Your one time password is: ' + randomNum,
-              //   fullName: capitalizeFirstLetter(UserData.fullName),
-              // };
-              Email.send({
-                from: 'e.life096@gmail.com',
-                to: UserData.email,
-                subject: 'Chef Order: Forgot Password OTP',
-                text: 'Your one time password is: ' + randomNum,
-              });
-
+              let userId = Meteor.userId()
+              //console.log('userId ******** ', userId)
+             Accounts.sendResetPasswordEmail(userId,Data.email)
               Utility.response(
                 context,
                 200,
-                successResponse({ msg: 'An OTP is sent to your registered Mobile number.' })
+                successResponse({ msg: 'An email is sent to your registered address.' })
               );
             } else {
-              Utility.response(context, 200, failResponse('Invalid OTP'));
+              Utility.response(context, 400, failResponse('Invalid email address'));
             }
           } else {
-            Utility.response(context, 200, failResponse('Your number is not registered with us'));
+            Utility.response(context, 400, failResponse('Your email is not registered with us'));
           }
         }
       } else {

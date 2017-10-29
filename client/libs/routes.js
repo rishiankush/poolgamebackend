@@ -110,6 +110,11 @@ Router.route('/', {
 //   template: 'aboutUs',
 // });
 
+Router.route('/resetpassword/:token', {
+    name: 'resetPassword',
+    template: 'resetPassword',
+});
+
 Router.route('/verify-email/:token', {
   name: 'verify-email',
   template: 'verifyEmail',

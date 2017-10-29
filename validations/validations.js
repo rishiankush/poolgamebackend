@@ -40,7 +40,15 @@ isDob = function(dob) {
 };
 
 isGender = function (gender) {
-  if(gender.match(/^male$|^female$/)){
+  if(gender.match(/^male$|^Male$|^female$|^Female$|^others$|^Others$/)){
+      return true;
+    } else{
+      return false;
+    }
+}
+
+isMartialStatus = function (martialStatus) {
+  if(martialStatus.match(/^single$|^Single$|^married$|^Married$|^divorced$|^Divorced$/)){
       return true;
     } else{
       return false;

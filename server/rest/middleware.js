@@ -3,21 +3,13 @@ import authentication from './Auth';
 import { getUserDataFromHeaders } from './Payload';
 
 const authNotRequiredURL = [
-  // '/rest/v1/stripe/createCustomer',
-  // '/rest/v1/stripe/cardToken',
-  // '/rest/v1/stripe/cron',
   '/rest/v1/user/signUp',
+  '/rest/v1/user/signUpWithBankAcc',
   '/rest/v1/user/verify',
-  // '/rest/v1/user/checkuser',
-  // '/rest/v1/user/forgotpwd',
-  // '/rest/v1/user/login',
   '/rest/v1/user/resendOtp',
-  // '/rest/v1/user/resetpwd',
-  // '/rest/v1/user/verifyOtp',
-  // '/rest/v1/files/upload',
-  // '/rest/v1/consumer/home',
-  // '/rest/v1/stripe/webhook',
-  // '/rest/v1/user/contact',
+  '/rest/v1/files/upload',
+  '/rest/v1/user/forgotpwd',
+  '/rest/v1/user/login',
 ];
 
 Router.configureBodyParsers();

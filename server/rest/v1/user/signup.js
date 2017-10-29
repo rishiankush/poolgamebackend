@@ -15,27 +15,27 @@ Router.route(
           password: NonEmptyString,
           confirmPassword: NonEmptyString,
           fullName: NonEmptyString,
-          phoneNum: NonEmptyString,
-          gender: NonEmptyString,
-          dob: NonEmptyString,
-          martialStatus: NonEmptyString
+          phoneNum: MaybeEmptyString,
+          gender: MaybeEmptyString,
+          dob: MaybeEmptyString,
+          martialStatus: MaybeEmptyString,
+          //deviceInfo:Object
         }),
         field = checkMandatoryFields(_.omit(Data, 'phoneNum', 'gender','dob','martialStatus'));
-      role = 0;
       if (validData) {
         // Meteor.call('sendGCM','fgDnMNMDGx8:APA91bFD-JQrEcG4NPQaNLvvBhiv03t4V25H9z_ISfE6bJMlUag5W59wrpte3BB4UFLO40OMn4DJhGtOoClIj6nQ9eQcRBuUljR6A4ym0xbaJQXLNmUSVo4FyoiksxzSk4TBU7Wh3FnU');
         if (!isEmail(Data.email)) {
           validData = false;
           Utility.response(context, 400, failResponse('Please enter valid email address'));
-        } 
-        else if (isPhoneNo(Data.phoneNum) == false) {
+        }
+        else if(Data.phoneNum != '' && isPhoneNo(Data.phoneNum) == false){
           validData = false;
           Utility.response(
             context,
             400,
             failResponse('Please enter valid phone number along with countrycode.')
           );
-        } 
+        }
         // else if (nestedPositionObject(Data.position) == false) {
         //   validData = false;
         //   Utility.response(context, 400, failResponse('Please enter a valid position'));
@@ -44,12 +44,16 @@ Router.route(
           Utility.response(context, 400, failResponse('Passwords does not match'))
         }
 
-        else if(!isDob(Data.dob)){
+        else if(Data.dob != '' && !isDob(Data.dob)){
           Utility.response(context, 400, failResponse('Please enter a valid date of birth'))
         }
 
-        else if(!isGender(Data.gender)){
+        else if(Data.gender != '' && !isGender(Data.gender)){
           Utility.response(context, 400, failResponse('Please enter a valid gender'))
+        }
+
+        else if(Data.martialStatus != '' && !isMartialStatus(Data.martialStatus)){
+          Utility.response(context, 400, failResponse('Please enter a valid martial status'))
         }
 
         else {
@@ -68,7 +72,6 @@ Router.route(
           if (!checkUserPhoneNum) {
             checkUserPhoneNum = {};
             checkUserPhoneNum.email = '';
-            checkUserPhoneNum.role = '';
           }
           //let userExists = UserMaster.findOne({ email: Data.email.toLowerCase() });
           //console.log('userExists ********* ',userExists)
@@ -80,10 +83,10 @@ Router.route(
                 'This email address is already registered. Please try again with a different email address.'
               )
             );
-          } else if (checkUserPhoneNum.phoneNum == Data.phoneNum) {
+          } else if (checkUserPhoneNum.phoneNum == Data.phoneNum && Data.phoneNum != '') {
             Utility.response(
               context,
-              200,
+              400,
               failResponse(
                 'This phone number is already registered. Please try again with a different number.'
               )
@@ -92,30 +95,39 @@ Router.route(
           else {
             //console.log(typeof(Data.favouriteFoods))
             //Data.favouriteFoods = Data.favouriteFoods.split(",");
-            var randomNum = Math.floor(Math.random() * 9000) + 1000;
-            sendSms(Data.phoneNum, randomNum);
-
+            if(Data.phoneNum != ''){
+              var randomNum = Math.floor(Math.random() * 9000) + 1000;
+              sendSms(Data.phoneNum, randomNum);
+            }
+            
             accountId = Accounts.createUser({
               email: Data.email,
               password: Data.password,
               profile: { isActive: 1 },
             });
-
+            let loginToken = Random.secret();
             let data = {
               userId: accountId,
+              auth: {
+                token: loginToken,
+                date_created: new Date(),
+              },
+              //deviceInfo: Data.deviceInfo,
               fullName: Data.fullName,
               email: Data.email.toLowerCase(),
-              password: Data.password,
+              //password: Data.password,
               phoneNum: Data.phoneNum,
               code: randomNum,
               firstTimeLogin: true,
               isVerified: false,
+              isPhoneNumVerified: false,
+              isBankVerified: false,
               createdAt: Date.now(),
               getNotification: 1,
               isActive: 1,
             };
             // Meteor.call('sendGCM','abc');
-            console.log('before upsert ******** ', data);
+            console.log('before insert ******** ', data);
             /* save related data to masterCollection */
            //Request.upsertUser(data);
             UserMaster.registerUser(data);
@@ -139,6 +151,7 @@ Router.route(
               successResponse({
                 msg:
                   'An email has been sent to your registered address, click on verification link in order to complete your account signup',
+                data: data
               })
             );
           }

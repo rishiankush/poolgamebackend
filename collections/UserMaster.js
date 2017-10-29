@@ -71,17 +71,17 @@ class MasterCollection extends Mongo.Collection {
 
     getUserData(Data) {
         return super.findOne({
-            $or: [{ email: Data }, { phoneNum: Data }, { userId: Data }]
+            $or: [{ email: Data }, { userId: Data }]
         });
     }
 
-    // setUserLastActivityTime(userId) {
-    //     return super.update({ userId }, {
-    //         $set: {
-    //             seen: Date.now() // last activity time
-    //         }
-    //     });
-    // }      
+    setUserLastActivityTime(userId) {
+        return super.update({ userId }, {
+            $set: {
+                seen: Date.now() // last activity time
+            }
+        });
+    }      
 
 }
 
