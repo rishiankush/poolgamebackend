@@ -1,5 +1,33 @@
 <template name="landingPage">
-    <div>
-        <h1>Welcome to Pool Game</h1>
+   <section id="content" class="m-t-lg wrapper-md animated fadeInUp">    
+    <div class="container aside-xxl">
+      <a class="logo" href="{{pathFor route='home'}}">
+      <img src="img/sport-fixer-logo.png" alt="logo" class="img-responsive"/>
+      </a>
+      <section class="panel panel-default bg-white m-t-lg">
+        <header class="panel-heading text-center">
+          <strong>Sign in</strong>
+        </header>
+        <form class="panel-body wrapper-lg signInForm">
+          <div class="form-group">
+            <label class="control-label">User Name</label>
+            <input name='email' type="text" placeholder="username" class="form-control input-md" required>
+          </div>
+          <div class="form-group">
+            <label class="control-label">Password</label>
+            <input name='password' type="password" id="inputPassword" placeholder="Password" class="form-control input-md" required>
+          </div>
+          <!-- <div class="checkbox">
+            <label>
+              <input type="checkbox"> Keep me logged in
+            </label>
+          </div> -->
+         
+          <button type="submit" class="btn btn-primary">Sign in</button>
+    <!--    <a href="#" id="forgot_password" class="btn btn-danger pull-right " >Forgot Password</a> -->
+                    <div class="line line-dashed"></div>
+        </form>
+      </section>
     </div>
+  </section>
 </template>

@@ -5,3 +5,7 @@ Meteor.publish('users', function() {
 Meteor.publish('UsersList', function() {
   return UserMaster.find({});
 });
+
+Meteor.publish('gamePricings', function() {
+  return gamePricing.find({});
+});

@@ -1,10 +1,10 @@
 NonEmptyString = Match.Where(function(x) {
-  console.log('function called for non empty string *******',x)
+  //console.log('function called for non empty string *******',x)
   return x.length > 0 && typeof String(x) === "string";
 });
 
 checkNumber = Match.Where(function(x) {
-    console.log('function called for number check *******',x)
+   // console.log('function called for number check *******',x)
     return parseInt(x);
 });
 

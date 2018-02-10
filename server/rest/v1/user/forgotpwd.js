@@ -28,10 +28,10 @@ Router.route(
         } else {
           let UserData = UserMaster.findOne({ email: Data.email });
           // let checkVerifiedUser = Meteor.users.findOne({ 'emails.verified': true })
-          //   console.log(checkVerifiedUser)
+             console.log(UserData)
           if (UserData ) {
             if (Data && hasQuery && validData) {
-              let userId = Meteor.userId()
+              let userId = UserData.userId;
               //console.log('userId ******** ', userId)
              Accounts.sendResetPasswordEmail(userId,Data.email)
               Utility.response(

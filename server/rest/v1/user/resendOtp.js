@@ -14,22 +14,10 @@ Router.route(
           phoneNum: NonEmptyString,
         }),
         field = checkMandatoryFields(Data);
-      if (validData) {
+      if(validData) {
         let randomNum = Math.floor(Math.random() * 9000) + 1000,
-          userPhoneNumData = UserMaster.findOne({ phoneNum: Data.phoneNum }),
-          requestPhoneNumData = Request.findOne({ phoneNum: Data.phoneNum });
-
-        if (requestPhoneNumData) {
-          sendSms(requestPhoneNumData.phoneNum, randomNum);
-          Request.update({ phoneNum: Data.phoneNum }, { $set: { code: randomNum } });
-          Utility.response(
-            context,
-            200,
-            successResponse({
-              msg: 'A verification code has been sent to your registered phone number.',
-            })
-          );
-        } else if (userPhoneNumData) {
+          userPhoneNumData = UserMaster.findOne({ phoneNum: Data.phoneNum });
+        if(userPhoneNumData) {
           sendSms(userPhoneNumData.phoneNum, randomNum);
           UserMaster.update({ phoneNum: Data.phoneNum }, { $set: { otp: randomNum } });
           Utility.response(

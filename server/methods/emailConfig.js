@@ -1,10 +1,11 @@
 Accounts.emailTemplates.resetPassword.text = function(user, url) {
-  var uName = Meteor.user().profile.name,
+  url = url.replace("#/", "");
+  var uName = user.profile.name,
     msg =
       'Your Credentials -\n-----------------------\nemail: ' +
-      Meteor.user().emails +
+      user.emails +
       '\npassword: ' +
-      Meteor.user().password +
+      user.password +
       '\n\nTo reset your account password click on the following link. \n',
     from = '\n\n\nThank you! \n\nThe PoolGame Team. \n';
 

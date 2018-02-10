@@ -1,0 +1,103 @@
+<template name="documentList">
+
+{{> slideMenu}}
+  <h1>Document List</h1>
+
+	<section class="scrollable padder">
+              <ul class="breadcrumb no-border no-radius b-b b-light pull-in">
+                <li><a href="{{pathFor route='home'}}"><i class="fa fa-home"></i> Home</a></li>
+                <li class="active">Document List</li>
+              </ul>
+              <button type="button" class="btn btn-default logout pull-right">Logout</button>
+              <div class="m-b-md">
+                <h3 class="m-b-none">Document List</h3>
+                 <button type="button" id="btnRespNav" class="btn-navbar navbar-toggle slideout-menu-toggle" style="display:block;" data-toggle="collapse" data-target="#login-navbar-collapse">
+                 Side </button>
+              </div>
+             <section class="panel panel-default">
+                <div class="row wrapper">
+                  <div class="col-sm-5 m-b-xs">
+                    Total Number of Players ({{usersCount}})
+                   </div>
+
+                  <!-- <div class="pull-right">
+                   <input type='text' class='searchPlayer' placeholder='Search player'/>
+                  </div> -->
+                    
+                  
+                  
+                </div>
+                <div class="table-responsive">
+                  <table class="table table-striped b-t b-light">
+                    <thead>
+                      <tr>
+                       <th>Player Name</th>
+                        <th>Player Email Id</th>
+                        <th>Phone Number</th>
+                        <th>Bank Name</th>
+                        <th>Account Number</th>
+                        <th>IFSC Number</th>
+                        <th>ID Proof</th>
+                        <th>Passport</th>
+                        <th>Address Proof</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    {{#each users}}
+                    <tr>
+                    <td>{{this.fullName}}</td>
+                    <td>{{this.email}}</td>
+                    <td>{{this.phoneNum}}</td>
+                    <td>{{this.bankName}}</td>
+                    <td>{{this.accNum}}</td>
+                    <td>{{this.ifscNum}}</td>
+                    <td><a target="_blank" href={{getUrl this.idProof}}>{{isUrl this.idProof 'Idproof'}}</a></td>
+                    <td><a target="_blank" href={{getUrl this.passportNum}}>{{isUrl this.idProof 'passport'}}</a></td>
+                    <td><a target="_blank" href={{getUrl this.addressProof}}>{{isUrl this.addressProof 'addressProof'}}</a></td>
+                    <td>
+                      {{#if this.kycVerified}}
+                        <a href="#">{{kycStatus this.kycVerified}}</a>
+                      {{else}}
+                        <button type="button" class="btn btn-danger deny">Deny</button>
+                        <button type="button" class="btn btn-success accept">Accept</button>
+                      {{/if}}
+                    
+                    </td>
+                    </tr>
+                   {{/each}}
+                                        
+                    </tbody>
+                  </table>
+                </div>
+
+                <footer class="panel-footer">
+                  <div class="row">
+                    <div class="col-sm-4 "> 
+                    <ul class="pagination pagination-sm m-t-none m-b-none">
+                        <li class="prevPage"><a href="#"><i class="fa fa-chevron-left "></i></a></li>
+                       {{#each usersPages}}
+                         <li class="userPage page{{this.pageNo}} {{isClassActive this.pageNo}}"><a href="#">{{this.pageNo}}</a></li>
+                        {{/each}}
+                        <li class="nextPage"><a href="#"><i class="fa fa-chevron-right "></i></a></li>
+                      </ul>
+                    </div> 
+                  </div> 
+                  <!--   <div class="col-sm-4 ">                
+                      <ul class="pagination pagination-sm m-t-none m-b-none">
+                        <li><a href="#"><i class="fa fa-chevron-left"></i></a></li>
+                        <li><a href="#">1</a></li>
+                        <li><a href="#">2</a></li>
+                        <li><a href="#">3</a></li>
+                        <li><a href="#">4</a></li>
+                        <li><a href="#">5</a></li>
+                        <li><a href="#"><i class="fa fa-chevron-right"></i></a></li>
+                      </ul>
+                    </div> -->
+                 
+                </footer>
+              </section>
+     
+   </section>
+
+</template>

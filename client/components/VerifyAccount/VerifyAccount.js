@@ -12,6 +12,7 @@ Template.verifyEmail.onRendered(function() {
                 );
                 Router.go('/');
             } else {
+               
                 console.log('Your account is verified');
                 swal(
                     '',

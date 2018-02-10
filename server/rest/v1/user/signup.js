@@ -18,10 +18,10 @@ Router.route(
           phoneNum: MaybeEmptyString,
           gender: MaybeEmptyString,
           dob: MaybeEmptyString,
-          martialStatus: MaybeEmptyString,
+          maritalStatus: MaybeEmptyString,
           //deviceInfo:Object
         }),
-        field = checkMandatoryFields(_.omit(Data, 'phoneNum', 'gender','dob','martialStatus'));
+        field = checkMandatoryFields(_.omit(Data, 'phoneNum', 'gender','dob','maritalStatus'));
       if (validData) {
         // Meteor.call('sendGCM','fgDnMNMDGx8:APA91bFD-JQrEcG4NPQaNLvvBhiv03t4V25H9z_ISfE6bJMlUag5W59wrpte3BB4UFLO40OMn4DJhGtOoClIj6nQ9eQcRBuUljR6A4ym0xbaJQXLNmUSVo4FyoiksxzSk4TBU7Wh3FnU');
         if (!isEmail(Data.email)) {
@@ -52,7 +52,7 @@ Router.route(
           Utility.response(context, 400, failResponse('Please enter a valid gender'))
         }
 
-        else if(Data.martialStatus != '' && !isMartialStatus(Data.martialStatus)){
+        else if(Data.maritalStatus != '' && !isMartialStatus(Data.maritalStatus)){
           Utility.response(context, 400, failResponse('Please enter a valid martial status'))
         }
 
@@ -106,25 +106,43 @@ Router.route(
               profile: { isActive: 1 },
             });
             let loginToken = Random.secret();
+              Roles.addUsersToRoles(accountId,[1]);
             let data = {
               userId: accountId,
               auth: {
                 token: loginToken,
-                date_created: new Date(),
+                date_created: Date.now(),
               },
               //deviceInfo: Data.deviceInfo,
               fullName: Data.fullName,
               email: Data.email.toLowerCase(),
               //password: Data.password,
-              phoneNum: Data.phoneNum,
-              code: randomNum,
+              // phoneNum: Data.phoneNum,
+              // code: randomNum,''
+              phoneNum: (Data.phoneNum)?Data.phoneNum:'',
+              gender: (Data.gender)?Data.gender:'',
+              dob: (Data.dob)?Data.dob:'',
+              maritalStatus: (Data.maritalStatus)?Data.maritalStatus:'',
               firstTimeLogin: true,
-              isVerified: false,
+              isEmailVerified: false,
               isPhoneNumVerified: false,
-              isBankVerified: false,
+              kycSubmitted: false,
+              kycVerified:0,
               createdAt: Date.now(),
               getNotification: 1,
               isActive: 1,
+              idProof: Data.idProof,
+              coins:100,
+              notes:100,
+              bonusNotes:100,
+              winningStreak:0,
+              passportNum:"",
+              addressProof: "",
+              bankName: "",
+              accNum:"",
+              swiftCode:'',
+              accountHolderName:'',
+              ifscNum:""
             };
             // Meteor.call('sendGCM','abc');
             console.log('before insert ******** ', data);

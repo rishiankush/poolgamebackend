@@ -54,7 +54,8 @@ Router.route(
   '/rest/v1/files/upload',
   function() {
     this.response.setHeader('Access-Control-Allow-Origin', '*');
-
+    // this.response.setHeader('Access-Control-Max-Age', '1000');
+    // this.response.setHeader('Access-Control-Allow-Headers', ['Content-Type', 'Authorization', 'X-Requested-With']);
     // Meteor.log._('ios test', this.request.headers);
     // Meteor.call('storeLog', this.request.headers);
 

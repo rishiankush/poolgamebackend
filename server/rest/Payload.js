@@ -15,6 +15,26 @@ class Payload {
 
     return field;
   }
+
+static mentionMandatoryFields(Data,fields){
+  for(let i=0; i< fields.length ; i++){
+
+    if(!Data.hasOwnProperty([fields[i]]) || !Data[fields[i]]){
+      return `Please enter ${fields[i]}`;
+    }
+  }
 }
+
+static feildsCannotBeEdited(Data,fields){
+   for(let i=0; i< fields.length ; i++){
+    if(Data.hasOwnProperty([fields[i]])){
+      return `${fields[i]} cannot be edited`;
+    }
+  }
+}
+
+}
+
+
 
 module.exports = Payload;

@@ -1,0 +1,331 @@
+<template name='addTournament'>
+<style>
+/* The container */
+.container {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 22px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* Hide the browser's default checkbox */
+.container input {
+    position: absolute;
+    opacity: 0;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color: #eee;
+}
+
+/* On mouse-over, add a grey background color */
+.container:hover input ~ .checkmark {
+    background-color: #ccc;
+}
+
+/* When the checkbox is checked, add a blue background */
+.container input:checked ~ .checkmark {
+    background-color: #2196F3;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+/* Show the checkmark when checked */
+.container input:checked ~ .checkmark:after {
+    display: block;
+}
+
+/* Style the checkmark/indicator */
+.container .checkmark:after {
+    left: 9px;
+    top: 5px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+.addTournament .form-group input,
+.addTournament .form-group select{
+  border: 1px solid #ccc;
+  margin: 0 0 10px;
+  padding: 6px 10px;
+  height: auto;
+  line-height: auto;
+  font-size: 12px;
+  background-image: none;
+}
+.left-input,
+.right-input{
+  width: 50%;
+}
+.left-input{
+  margin-right: 15px;
+}
+</style>
+<script type="text/javascript">
+ function validateQty(event) {
+    var key = window.event ? event.keyCode : event.which;
+
+if (event.keyCode == 8 || event.keyCode == 46
+ || event.keyCode == 37 || event.keyCode == 39) {
+    return true;
+}
+else if ( key < 48 || key > 57 ) {
+    return false;
+}
+else return true;
+};
+</script>
+<section class="vbox">          
+            <section class="scrollable padder">
+              <ul class="breadcrumb no-border no-radius b-b b-light pull-in">
+                <li><a href="{{pathFor route='home'}}"><i class="fa fa-home"></i> Home</a></li>
+                <li class="active">Add Tournament</li>
+              </ul>
+              <div class="m-b-md">
+                <h3 class="m-b-none">Add Tournament</h3>
+              </div>
+             
+<div class="row" style="display:flex;justify-content: center;">
+  <div class="col-sm-10">
+    <section class="panel panel-default" >
+      <header class="panel-heading font-bold">Add Tournament</header>
+      <div class="panel-body">
+         <form  class="panel-body wrapper-lg addTournament ">
+             <div class="col-sm-12" >
+                <div class="form-group">
+                  <label class="control-label">Folder Name<span style="color:red"> *</span>  </label>
+                  <input name="folderName" type="text" placeholder="eg. Your Venue Name" class="form-control input-md"  required>
+                </div>
+
+                <div class="form-group">
+                  <label class="control-label">Sub folder Name<span style="color:red"> *</span>  </label>
+                  <input name="subFolderName" type="text" placeholder="eg. Your Venue Name" class="form-control input-md"  required>
+                </div>
+             
+               <div class="form-group">
+                 <label class="container">Wait for players
+                    <input name='WFP' type="checkbox" class="WFP">
+                    <span class="checkmark"></span>
+                 </label>
+                </div>
+
+                {{#if WFP}}
+                <div class="form-group" style="display:flex;">
+                  <div class="left-input">
+                    <label class="control-label">Registration Start Time<span style="color:red"> *</span>  </label>
+                    <input name="regStartTime" id="registrationStartTime" placeholder="" type="text" class="form-control">
+                  </div>
+
+
+                  <div class="right-input">
+                    <label class="control-label">Registration End Time<span style="color:red"> *</span>  </label>
+                    <input name="regEndTime" id="registrationEndTime" placeholder="" type="text" class="form-control">
+                  </div>
+                    
+                </div>
+
+                <div class="form-group" style="display:flex;">
+                  <div class="left-input">
+                  <label class="control-label">Match Start Time<span style="color:red"> *</span>  </label>
+                  <input name='matchStartTime' id="matchStartTime" placeholder="" type="text" class="form-control">
+                  </div>
+
+                  <div class="right-input">
+                   <label class="control-label">Match End Time<span style="color:red"> *</span>  </label>
+                   <input name='matchEndTime' id="matchEndTime" placeholder="" type="text" class="form-control">
+                  </div>
+                </div>
+                {{/if}}
+
+              <div class="form-group">
+                        <label class="control-label" style="text-align:left">Number of Players<span style="color:red"> *</span></label>
+                      
+                          <select name="numOfPlayers" class=" form-control numOfPlayers" required>
+                             <option value="" disabled selected>Select Players</option>
+                            {{#each numberOfPlayers}}
+                            <option  value="{{this}}">{{this}}</option>
+                            {{/each}}
+                         </select>
+              </div>
+             
+             
+
+               <div class="form-group">
+                        <label class="control-label" style="text-align:left">Country<span style="color:red"> *</span></label>
+                      
+                          <select name="country" class="countries form-control" required>
+                             <option value="WholeWorld"  selected>Whole World</option>
+                            {{#each countries}}
+                            <option  value="{{this}}">{{this}}</option>
+                            {{/each}}
+                         </select>
+                 
+              </div>
+              {{#if showCities}}
+              <div class="form-group">
+                        <label class="control-label" style="text-align:left">City<span style="color:red"> *</span></label>
+                        
+                          <select name="city" class="cities form-control" required>
+                           <option value="" disabled >Select City</option>
+                            {{#each cities}}
+                            <option  >{{this}}</option>
+                            {{/each}}
+                           </select> 
+                       
+              </div>
+              {{/if}}
+               <div class="form-group" style="display:flex;">
+                    
+                         <label class="container">Recursive Play
+                            <input name="recursivePlay" type="checkbox" class="recursive">
+                            <span class="checkmark"></span>
+                         </label>
+                     
+
+                     
+                         <label class="container">Ticket Tournaments
+                            <input name="ticketTournament" type="checkbox" class="ticketTournament">
+                            <span class="checkmark"></span>
+                         </label>
+                     
+                </div>
+
+                 {{#if ticketTournament}}
+                <div class="form-group" style="display:flex;">
+                  <div class="left-input">
+                    <label class="control-label">Gate Entry Amount in Coins<span style="color:red"> *</span>  </label>
+                    <input name='coinsEnteryAmount'  placeholder="Amount" type="text" class="form-control" >
+                  </div>
+                  <div class="right-input">
+                    <label class="control-label">Gate Entry Amount in Notes<span style="color:red"> *</span>  </label>
+                    <input name='notesEnteryAmount' placeholder="Amount" type="text" class="form-control" >
+                  </div>
+                  
+                  <div class="right-input">
+                    <label class="control-label">Total Entry Amount in Coins<span style="color:red"> *</span>  </label>
+                    <input onkeypress='return validateQty(event)' name='totalEnteryCoins' placeholder="Amount" type="text" class="form-control totalEnteryCoins" >
+                  </div>
+
+                  <div class="right-input">
+                    <label class="control-label">Total Entry Amount in Notes<span style="color:red"> *</span>  </label>
+                    <input onkeypress='return validateQty(event)' name='totalEnteryNotes' placeholder="Amount" type="text" class="form-control totalEnteryNotes" >
+                  </div>
+                 
+                </div>
+                {{else}}
+
+                 <div class="form-group" style="display:flex;">
+                  <label class="control-label">Gate Entry ticket label<span style="color:red"> *</span>  </label>
+                  <input id="ticketEnteryAmount" placeholder="Amount" type="text" class="form-control" required>
+               
+                </div>
+
+                {{/if}}
+              <!-- <div class="form-group">
+                <label class="control-label">Email Id </label>
+                <input name="networkEmail" type="email" placeholder="test@example.com" class="form-control input-md" required>
+              </div> -->
+              
+              <div class="form-group">
+                <label class="control-label">Winner Prize</label>
+                <input onkeypress='return validateQty(event)'  name="winnerCoins" type="text" placeholder="Coins" class="form-control input-md winnerCoins" {{required 'coins'}}>
+
+                <input onkeypress='return validateQty(event)'  name="winnerNotes" type="text" placeholder="Notes" class="form-control input-md winnerNotes" {{required 'notes'}}>
+
+                <input  name="winnerTicket" {{required 'tickets'}} type="text" placeholder="Tickets" class="form-control input-md" >
+              </div>
+
+              <div class="form-group">
+                <label class="control-label">Runner Up Prize</label>
+                <input onkeypress='return validateQty(event)'  name="runnerUpCoins" type="text" placeholder="Coins" class="form-control input-md runnerUpCoins" {{required 'coins'}}>
+
+                <input onkeypress='return validateQty(event)'  name="runnerUpNotes" type="text" placeholder="Notes" class="form-control input-md runnerUpNotes" {{required 'notes'}}>
+
+                <input  name="runnerUpTicket" type="text" placeholder="Tickets" class="form-control input-md" {{required 'tickets'}}>
+              </div>
+               
+              {{#each rounds}}
+               <div class="form-group">
+                <label class="control-label">Round {{this.round}} - players {{this.players}} x </label>
+                <input onkeypress='return validateQty(event)' type="text" class="round{{this.round}}Notes" name="round{{this.round}}Notes" placeholder="Round {{this.round}} notes">
+                <input onkeypress='return validateQty(event)' type="text" class="round{{this.round}}Coins" name="round{{this.round}}Coins" placeholder="Round {{this.round}} coins">
+               </div>
+              {{/each}}
+              
+              <p><label class="control-label">Coins left for loosers: {{leftCoins}}</label></p>
+
+               <label class="control-label">Notes left for loosers: {{leftNotes}}</label>
+
+
+               <div class="form-group text-center">
+                  <button type="submit" class="btn btn-primary signUp" >Submit</button>
+                  <input type="reset" value="Reset">
+                </div>
+
+            </div>
+
+
+            <!-- <div class="col-sm-6">
+              <div class="form-group text-center"> -->
+                          
+                       <!--    <img style="height:147px;width:136px" id="image_upload_preview" src='{{AbsoluteURL}}{{userDetails.profilePic}}'/> -->
+              <!-- </div> -->
+              
+             <!--  <div class="form-group row">
+                <label class="control-label col-sm-3" style="text-align:left">Logo<span style="color:red"> *</span></label>
+                            <input id="inputFile" Placeholder='Zipcode/Postalcode' name="profilePic"  type="file" class="col-sm-8 profilePic" >
+              </div> -->
+              <!--   <div class="form-group text-center">
+                  <button type="submit" class="btn btn-primary signUp" >Update</button>
+                </div>
+              
+            </div> -->
+
+
+
+
+
+
+              <!-- <div class="form-group">
+                <label class="control-label">Password</label><span style="color:red"> *</span>
+                <input name="password" type="password" placeholder="eg. test.com" class="form-control input-md">
+              </div>
+              <div class="form-group">
+                <label class="control-label">Confirm password </label><span style="color:red"> *</span>
+                <input name="confirmPassword" type="password" placeholder="eg. test.com" class="form-control input-md">
+              </div> -->
+             
+              
+              <div class="line line-dashed"></div>
+            </form>
+        </div>
+      </section>
+    </div>
+    
+  </div>
+  
+</section>
+</section>
+         
+</template>

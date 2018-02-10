@@ -1,10 +1,10 @@
 Meteor.methods({
   authentication: function(userId, token) {
     //let UserData = Meteor.users.findOne({ _id: userId });
-    let UserData = UserMaster.findOne({ userId: userId });
+    let UserData = UserMaster.findOne({ userId });
     let activeUser = UserData ? UserData.isActive : false;
 
-    // console.log(userId, token);
+     console.log('in method',userId, token);
 
     if (UserData) {
       // if (!UserData.profile.isActive) {
@@ -34,4 +34,5 @@ Meteor.methods({
   serverTime: function() {
     return Date.now();
   },
+  
 });

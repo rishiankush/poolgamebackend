@@ -19,8 +19,9 @@ Router.route(
           accNum: MaybeEmptyString,
           ifscNum: MaybeEmptyString
         }),
-        field = checkMandatoryFields(_.omit(Data, 'idProof', 'passportNum', 'addressProof','bankName','accNum','ifscNum'));
-      if (validData) {
+        field = checkMandatoryFields(_.omit(Data, 'idProof', 'passportNum', 'addressProof','bankName','accNum','ifscNum','swiftCode','accountHolderName'));
+      console.log('-----------',field)
+      if(!field) {
         let userData = UserMaster.findOne({userId: Data.userId});
         console.log('userdata ***** ',userData)
         if(Data.userId != userData.userId && userData == undefined){
@@ -39,8 +40,28 @@ Router.route(
               bankName: Data.bankName,
               accNum: Data.bankName,
               ifscNum: Data.ifscNum,
-              isBankVerified:true
-            }})
+              kycSubmitted:true,
+              kycVerified:0,
+              swiftCode:Data.swiftCode,
+              accountHolderName:Data.accountHolderName,
+              updatedAt:Date.now()
+            }});
+
+           
+            Meteor.defer(function () {
+              Email.send({
+                     to:'testuser1.poolgame@gmail.com',
+                      from:'notifications@PoolGame.com',
+                      subject:'User added Kyc Information', 
+                      html: `<p>Please check the link below to verify user<./p>
+                      <a href='https://www.uslenterprise.com/'>https://www.uslenterprise.com/</a>
+                      <br>
+                      <p>Regards,</p>
+                      <p>-PoolGame Notifications</p>`
+
+                    });
+            });
+
           }
 
             //let data = UserMaster.findOne({userId:Data.userId})
@@ -56,7 +77,7 @@ Router.route(
               }
             })
           }
-          
+          userData = UserMaster.findOne({userId: Data.userId});
           Utility.response(
               context,
               200,

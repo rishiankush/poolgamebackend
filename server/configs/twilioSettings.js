@@ -11,10 +11,10 @@ sms = {
 const client = new twilio(sms.accountSid, sms.authToken);
 
 //console.log(new twilio(sms.accountSid, sms.authToken))
-
+//console.log(client)
 sendSms = (phoneNum, randomNum) => {
   client
-    .sendSms({
+    .messages.create({
       body: 'PoolGame one time password:' + randomNum,
       to: phoneNum,
       from: '+16062631146',

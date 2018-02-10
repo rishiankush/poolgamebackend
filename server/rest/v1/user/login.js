@@ -13,6 +13,8 @@ Router.route(
         validData = Utility.validate(Data, {
           email: NonEmptyString, // here email field is just a name of field which takes both phone number and email
           password: NonEmptyString,
+          deviceToken:NonEmptyString,
+          platform:NonEmptyString,
           //deviceInfo: Object,
         }),
         field = checkMandatoryFields(Data);
@@ -21,6 +23,33 @@ Router.route(
       // }
 
       if (validData) {
+          if (!isEmail(Data.email)) {
+            Utility.response(context, 400, failResponse('Please enter valid email address.'));
+            return;
+          }else{
+              Data.email = Data.email.toLowerCase(); 
+             let result = serverSideLogin(Data.email, Data.password);
+             if(result.error){
+              Utility.response(context, 400, failResponse(result.message));
+              return
+             }else{
+                if(result.user.emails[0].verified){
+                  console.log(result.user._id)
+                   let userData = UserMaster.findOne({userId:result.user._id});
+                   UserMaster.update({userId:userData.userId},{$set:{ isEmailVerified:true,
+                                                                      firstTimeLogin:false,
+                                                                      deviceInfo:{
+                                                                        deviceToken:Data.deviceToken,
+                                                                        platform:Data.platform
+                                                                      }
+                                                                      }});
+                   Utility.response(context, 200, successResponse({data:userData}));
+                }else{
+                   Utility.response(context, 400, failResponse('This email is not verified with us.'));           
+                }
+              
+             }
+          }
         // let UserData = '';
         // // if user has filled email, we get emailMatch
         // emailMatch =
@@ -59,29 +88,29 @@ Router.route(
         //   let data = UserMaster.getUserData(Data.email);
         //   //console.log('here is data****** ',data)
 
-        let userData = UserMaster.findOne({email:Data.email});
-        let emailMatch = Meteor.users.findOne({'emails.address':Data.email})
-          console.log('emailMatch ****** ',emailMatch.emails[0].verified)
-          if (!isEmail(Data.email)) {
-            validData = false;
-            Utility.response(context, 400, failResponse('Please enter valid email address.'));
-          }
+        // let userData = UserMaster.findOne({email:Data.email});
+        // let emailMatch = Meteor.users.findOne({'emails.address':Data.email})
+        //   console.log('emailMatch ****** ',emailMatch.emails[0].verified)
+        //   if (!isEmail(Data.email)) {
+        //     validData = false;
+        //     Utility.response(context, 400, failResponse('Please enter valid email address.'));
+        //   }
 
-          else if(userData.email != Data.email){
-            Utility.response(context, 400, failResponse('This email is not registered with us.'));           
-          }
+        //   else if(userData.email != Data.email){
+        //     Utility.response(context, 400, failResponse('This email is not registered with us.'));           
+        //   }
 
-          else if(emailMatch.emails[0].verified == false){
-            Utility.response(context, 400, failResponse('This email is not verified with us.'));           
-          }
+        //   else if(emailMatch.emails[0].verified == false){
+        //     Utility.response(context, 400, failResponse('This email is not verified with us.'));           
+        //   }
 
-          else{
-            Utility.response(
-              context,
-              200,
-              successResponse({ msg: 'User logged in successfully', data: userData })
-            );
-          }
+        //   else{
+        //     Utility.response(
+        //       context,
+        //       200,
+        //       successResponse({ msg: 'User logged in successfully', data: userData })
+        //     );
+        //   }
         
       } else {
         // in case of invalid data

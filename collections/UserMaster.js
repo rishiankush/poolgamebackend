@@ -45,11 +45,6 @@ class MasterCollection extends Mongo.Collection {
             }
         });
     }
-
-    updateStatus(condition, query) {
-        return super.update(condition, query, { upsert: true });
-    }
-
     checkToken(token, userId) {
         if (super.findOne({ "auth.token": token, userId: userId })) return true;
         else {
@@ -81,7 +76,20 @@ class MasterCollection extends Mongo.Collection {
                 seen: Date.now() // last activity time
             }
         });
-    }      
+    }    
+
+    updateGains(userId,coins,notes,bonusNotes,winningStreak=0){
+        return super.update({userId},{ $inc: { coins,
+                                                notes,
+                                                bonusNotes,
+                                                winningStreak 
+                                              },
+                                       });  
+    }  
+
+    endStreak(looserId){
+        return super.update({userId:looserId},{$set:{winningStreak:0}});
+    }
 
 }
 

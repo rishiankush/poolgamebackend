@@ -9,7 +9,7 @@ let isLoggedIn = function() {
 Router.configure({
   layoutTemplate: 'layout',
   loadingTemplate: 'spinner',
-  waitOn: function() {
+  subscriptions: function() {
     return [Meteor.subscribe('users')];
   },
 });
@@ -19,30 +19,55 @@ Router.route('/', {
   template: 'landingPage',
 });
 
-// Router.route('/admin', {
-//   name: 'login',
-//   template: 'login',
-//   onBeforeAction: function() {
-//     if (!Meteor.userId()) {
-//       this.render('login');
-//     } else {
-//       Router.go('dashboard');
-//     }
-//   },
-// });
+Router.route('/documentList', {
+  name: 'documentList',
+  template: 'documentList',
+  subscriptions:function(){
+    return Meteor.subscribe('UsersList');
+  },
+  onBeforeAction: function() {
+    if (!Meteor.userId()) {
+       Router.go('/');
+    } else {
+     this.next();
+    }
+  },
+});
 
-// Router.route('/dashboard', {
-//   name: 'dashboard',
-//   template: 'dashboard',
-//   layoutTemplate: 'layout',
-//   onBeforeAction: isLoggedIn,
-//   waitOn: function() {
-//     return [
-//       Meteor.subscribe('BookingData'),
-//       //Meteor.subscribe("users")
-//     ];
-//   },
-// });
+Router.route('/addTournament', {
+  name: 'addTournament',
+  template: 'addTournament',
+  subscriptions:function(){
+    return Meteor.subscribe('UsersList');
+  },
+  // onBeforeAction: function() {
+  //   if (!Meteor.userId()) {
+  //      Router.go('/');
+  //   } else {
+  //    this.next();
+  //   }
+  // },
+});
+
+Router.route('/SingleGameFees', {
+  name: 'SingleGameFees',
+  template: 'SingleGameFees',
+  subscriptions:function(){
+    return Meteor.subscribe('gamePricings');
+  },
+  // onBeforeAction: function() {
+  //   if (!Meteor.userId()) {
+  //      Router.go('/');
+  //   } else {
+  //    this.next();
+  //   }
+  // },
+});
+
+Router.route('/sendNotifications', {
+  name: 'sendNotifications',
+  template: 'sendNotifications',
+  });
 
 // Router.route('/bookingDetails', {
 //   name: 'bookingDetails',
@@ -110,7 +135,7 @@ Router.route('/', {
 //   template: 'aboutUs',
 // });
 
-Router.route('/resetpassword/:token', {
+Router.route('/reset-password/:token', {
     name: 'resetPassword',
     template: 'resetPassword',
 });

@@ -1,4 +1,5 @@
 export default function authentication({ userId, token }) {
+	
   if (userId) {
     return Meteor.call('authentication', userId, token);
   }
